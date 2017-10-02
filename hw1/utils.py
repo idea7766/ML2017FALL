@@ -50,13 +50,14 @@ def load(path, mode = 'train'): # only for ML2017FALL hw1
         #         arr_pm25 = np.append(arr_pm25, [arr_pm25_pre[18*i:18+18*i, j]], axis = 0)
         return arr_pm25_pre
 
-def align(data, n):
-    if n <= 0 or None:
+def align(data, num):
+    if num <= 0 or None:
         raise('請輸入大於 0 的數值')
-    run = data.shape[0] - n + 1 # 毎 n 比當成 1 筆 data
-    ls_align_data = []
-    for i in range(run):
-        ind = 18 * i
-        ls_align_data.append(data[ind: ind + 18].flatten())
+    run = data.shape[0] - num + 1 # 毎 n 比當成 1 筆 data
+    ls_align_data = np.array([data[0:num].flatten()])
+    for ind in range(run):
+        if ind == 0:
+            continue
+        ls_align_data = np.append(ls_align_data, [data[ind:ind+num].flatten()], axis = 0)
     new_data = np.asarray(ls_align_data)
     return new_data
