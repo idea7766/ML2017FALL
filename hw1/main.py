@@ -7,23 +7,22 @@ import linear_model as lm
 import utils
 
 data_path = sys.argv[1]
+data_path = sys.argv[2]
 # output_path = sys.argv[2]
 
-arr_pm25 = utils.load(data_path, mode = 'train')
+arr_train = utils.load(data_path, mode = 'train')
 
 
 #製作 "x, y" ，以每個小時預測下一個小時
-x = arr_pm25[:-1, :]
-y = arr_pm25[1:,9]
-x, max, min = utils.rescaling(arr_pm25)
+x = arr_train[:-1, :]
+y = arr_train[1:,9]
+x, max, min = utils.rescaling(arr_train)
 print(x.shape)
 print(y.shape)
 
 b, w = lm.LinearRegression(x[:-1], y, lr = 0.01, epoch = 100000)
 predicted = lm.predcit(x[:-1], b, w)
 
-# print('coef:', lr.coef_)
-# print('mean square:', mean_squared_error(y, predicted))
 
 fig, ax =plt.subplots()
 #點座標
