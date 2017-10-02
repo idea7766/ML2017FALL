@@ -23,7 +23,8 @@ y = arr_train[1:,9]
 print(x.shape)
 print(y.shape)
 
-b, w = lm.LinearRegression(x, y, lr = 0.01, epoch = 100000)
+# b, w = lm.LinearRegression(x, y, lr = 0.01, epoch = 100000)
+b, w = lm.LinearRegression_close(x, y)
 
 x_test = utils.scaling(arr_test, max, min) 
 predicted = lm.predcit(x_test, b, w)

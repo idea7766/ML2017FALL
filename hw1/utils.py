@@ -71,7 +71,7 @@ def write_out_ans(data, path):
     col = ['id', 'value']
     ans_sheet = []
     for i in range(data.shape[0]):
-        ans_sheet.append(('id_' + str(i), data[i]))
+        ans_sheet.append(('id_' + str(i), int(data[i])))
     df_ans = pd.DataFrame(ans_sheet, index = None, columns = col)
     df_ans.to_csv(path, index=False)
     print("應該存成功了...")
