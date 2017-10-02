@@ -44,14 +44,14 @@ def load(path, mode = 'train'): # only for ML2017FALL hw1
         arr_pm25_pre = df_pm25.iloc[:,2:].replace('NR', 0).values
         arr_pm25_pre = arr_pm25_pre.astype(float)
         # print(arr_pm25_pre.shape[0])
-        arr_pm25 = np.array([arr_pm25_pre[:18, 0].flatten()])
+        arr_pm25 = np.array([np.transpose(arr_pm25_pre[:18]).flatten()])
 
         run = int(arr_pm25_pre.shape[0]/18)
         # print(run)
         for i in range(run):
             if i == 0:
                 continue
-            arr_pm25 = np.append(arr_pm25, [arr_pm25_pre[18*i:18*i+18].flatten()])
+            arr_pm25 = np.append(arr_pm25, [np.transpose(arr_pm25_pre[18*i:18*i+18]).flatten()], axis=0)
 
         return arr_pm25
 
@@ -66,3 +66,12 @@ def align(data, num):
         ls_align_data = np.append(ls_align_data, [data[ind:ind+num].flatten()], axis = 0)
     new_data = np.asarray(ls_align_data)
     return new_data
+
+def write_out_ans(data, path):
+    col = ['id', 'value']
+    ans_sheet = []
+    for i in range(data.shape[0]):
+        ans_sheet.append(('id_' + str(i), data[i]))
+    df_ans = pd.DataFrame(ans_sheet, index = None, columns = col)
+    df_ans.to_csv(path, index=False)
+    print("應該存成功了...")

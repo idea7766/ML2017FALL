@@ -8,7 +8,7 @@ import utils
 
 train_path = sys.argv[1]
 test_path = sys.argv[2]
-# output_path = sys.argv[3]
+output_path = sys.argv[3]
 
 arr_train = utils.load(train_path, mode = 'train')
 arr_test = utils.load(test_path, mode = 'test')
@@ -28,6 +28,7 @@ b, w = lm.LinearRegression(x, y, lr = 0.01, epoch = 100000)
 x_test = utils.scaling(arr_test, max, min) 
 predicted = lm.predcit(x_test, b, w)
 
+utils.write_out_ans(predicted, output_path)
 print(predicted)
 '''
 fig, ax =plt.subplots()
