@@ -35,6 +35,7 @@ def load(path, mode = 'train'): # only for ML2017FALL hw1
                 if i==0 and j == 0:
                     continue
                 arr_pm25 = np.append(arr_pm25, [arr_pm25_pre[18*i:18+18*i, j]], axis = 0)
+        arr_pm25 = align(arr_pm25, 9)
         return arr_pm25
 
     if mode == 'test':
@@ -42,13 +43,17 @@ def load(path, mode = 'train'): # only for ML2017FALL hw1
         #將 'NR' 改成 0
         arr_pm25_pre = df_pm25.iloc[:,2:].replace('NR', 0).values
         arr_pm25_pre = arr_pm25_pre.astype(float)
+        # print(arr_pm25_pre.shape[0])
+        arr_pm25 = np.array([arr_pm25_pre[:18, 0].flatten()])
 
-        # for i in range(240):
-        #     for j in range(24):
-        #         if i==0 and j == 0:
-        #             continue
-        #         arr_pm25 = np.append(arr_pm25, [arr_pm25_pre[18*i:18+18*i, j]], axis = 0)
-        return arr_pm25_pre
+        run = int(arr_pm25_pre.shape[0]/18)
+        # print(run)
+        for i in range(run):
+            if i == 0:
+                continue
+            arr_pm25 = np.append(arr_pm25, [arr_pm25_pre[18*i:18*i+18].flatten()])
+
+        return arr_pm25
 
 def align(data, num):
     if num <= 0 or None:

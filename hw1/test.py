@@ -12,3 +12,4 @@ train_data = utils.align(train_data, 9)
 
 print(train_data.shape)
 
+ 
