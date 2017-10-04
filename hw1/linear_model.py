@@ -45,17 +45,18 @@ def LinearRegression_close(x, y):
     x = np.insert(x, 0, values = 1, axis = 1)
     x_trans = np.transpose(x)
     
-    y_mat = np.transpose(np.mat(y))
-    # print(y_mat.shape)
+    # y_mat = np.transpose(np.mat(y))
+    y_mat = np.mat(y)  
+    print(y_mat.shape)
     x_mat = np.mat(x)
-    # print(x_mat.shape)
+    print(x_mat.shape)
     x_trans_mat = np.mat(x_trans)
-    # print(x_trans_mat.shape)
+    print(x_trans_mat.shape)
 
     w = inv(x_trans_mat * x_mat)  * x_trans_mat * y_mat
     w = np.array(w)
     w = w.flatten()
-    # print(w)
+    print(w)
 
     return w[0], w[1:] #return b, w
 
@@ -136,7 +137,7 @@ def gradient(x, y, w):
 
     return gradient_weight
 
-def predcit(x, b, w):
+def predict(x, b, w):
     count = x.shape[0]
     y = np.array([])
     for i in range(count):
