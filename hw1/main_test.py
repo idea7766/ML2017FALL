@@ -33,7 +33,7 @@ for i in range(5):
     print('x train: ',x_train.shape)
     print('y train', y_train.shape)
     # b_temp, w_temp = lm.LinearRegression_close(x_train, y_train)
-    b_temp, w_temp = lm.LinearRegression(x_train, y_train, lr = 0.01, epoch = 10000)
+    b_temp, w_temp = lm.LinearRegression(x_train, y_train, lr = 0.01, epoch = 10000, x_val = x_val, y_val = y_val)
     b = b + b_temp
     w = w + w_temp
 b = b / 5

@@ -33,7 +33,7 @@ def LinearRegression(x, y, lr = 0.0001 , epoch = 5, ex_size = 20, lr_method = 's
         for i in range(epoch):
             b, w = SGD(x, y, lr, b, w)
             print('epoch:', i+1)
-            stop, loss = early_stopping(x, y, b, w, loss)
+            stop, loss = early_stopping(x_val, y_val, b, w, loss)
             if  stop == True:
                 break
     return b, w
