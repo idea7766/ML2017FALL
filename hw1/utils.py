@@ -42,11 +42,26 @@ def load(path, mode = 'train', fea_select = None): # only for ML2017FALL hw1
                     continue
                 data_of_hour = arr_pm25_pre[18*i:18+18*i, j]
                 arr_pm25 = np.append(arr_pm25, [data_of_hour], axis = 0)
-        
+
         if fea_select != None:
             arr_pm25 = arr_pm25[:, fea_select]
-        arr_pm25 = align(arr_pm25, 9)
-        return arr_pm25
+
+        data_of_month = arr_pm25.shape[0] / 12
+        arr_pm25_new = align(arr_pm25[0: data_of_month], 9)
+        print(arr_pm25_new.shape)
+        x_new = arr_pm25_new [:-1]
+        y_new = arr_pm25_new [1:, 35]
+        for i in range(12):
+            if i == 0:
+                continue
+            arr_pm25_temp = align(arr_pm25[data_of_month * i : data_of_month * (i + 1)], 9)
+            x_new = np.append(x_new, arr_pm25_temp[:-1], axis = 0)
+            y_new = np.append(y_new, arr_pm25_temp[1:, 35], axis = 0)
+
+        return x_new, y_new     
+
+        # arr_pm25 = align(arr_pm25, 9)
+        # return arr_pm25
 
     if mode == 'test':
         df_pm25 = pd.read_csv(path, encoding='big5', header=None)
@@ -67,6 +82,11 @@ def load(path, mode = 'train', fea_select = None): # only for ML2017FALL hw1
             arr_pm25 = np.append(arr_pm25, [data_of_9hr.flatten()], axis=0)
 
         return arr_pm25
+
+# def split_to_day(data, y_ind):
+#     data_of_month = data.shape[0] / 12
+#     data = align(data, 9)
+#     for in
 
 def align(data, num):
     if num <= 0 or None:

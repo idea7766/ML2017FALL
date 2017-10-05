@@ -12,17 +12,22 @@ test_path = os.path.join(os.path.dirname(__file__), "./data/test.csv")
 output_path = os.path.join(os.path.dirname(__file__), "./ans.csv")
 
 
-arr_train = utils.load(train_path, mode = 'train', fea_select = (4, 5, 6, 9))
+# arr_train = utils.load(train_path, mode = 'train', fea_select = (4, 5, 6, 9))
+x, y= utils.load(train_path, mode = 'train', fea_select = (4, 5, 6, 9))
+print(x)
+print(y)
+
+
 arr_test = utils.load(test_path, mode = 'test', fea_select = (4, 5, 6, 9))
 
 # np.random.shuffle(arr_train)
-
+print()
+# x, max, min = utils.rescaling(x)
 
 #製作 "x, y" ，以每個小時預測下一個小時
-x, max, min = utils.rescaling(arr_train[:-1])
+# x, max, min = utils.rescaling(arr_train[:-1])
 # x = arr_train[:-1, :]
-y = arr_train[1:,-1]
-
+# y = arr_train[1:,-1]
 
 b, w = np.array([0]), np.zeros(x.shape[1])
 for i in range(5):
@@ -43,8 +48,8 @@ print('w shape: ', w.shape)
 # b, w = lm.LinearRegression(x, y, lr = 0.01, epoch = 100000)
 # b, w = lm.LinearRegression_close(x, y)
 
-# x_test = arr_test
-x_test = utils.scaling(arr_test, max, min) 
+x_test = arr_test
+# x_test = utils.scaling(arr_test, max, min) 
 # print(x_test)
 predicted = lm.predict(x_test, b, w)
 print(predicted)

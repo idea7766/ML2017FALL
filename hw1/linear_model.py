@@ -48,8 +48,8 @@ def LinearRegression_close(x, y):
     x = np.insert(x, 0, values = 1, axis = 1)
     x_trans = np.transpose(x)
     
-    # y_mat = np.transpose(np.mat(y))
-    y_mat = np.mat(y)  
+    y_mat = np.transpose(np.mat(y))
+    # y_mat = np.mat(y)  
     print(y_mat.shape)
     x_mat = np.mat(x)
     print(x_mat.shape)
