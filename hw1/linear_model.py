@@ -1,7 +1,7 @@
 import numpy as np
 from numpy.linalg import inv
 
-def LinearRegression(x, y, lr = 0.0001 , epoch = 5, ex_size = 20, lr_method = 'static'):
+def LinearRegression(x, y, lr = 0.0001 , epoch = 5, ex_size = 20, lr_method = 'static', x_val = None,  y_val = None):
     '''
     # Linear Regression
     ## Basic Concpet
@@ -21,6 +21,7 @@ def LinearRegression(x, y, lr = 0.0001 , epoch = 5, ex_size = 20, lr_method = 's
     # initialization
     b = 0
     w = np.zeros(x.shape[1])
+    loss = None
 
     if lr_method == 'adagrad':
         # print('目前只有 static learning rate\n')
@@ -31,8 +32,10 @@ def LinearRegression(x, y, lr = 0.0001 , epoch = 5, ex_size = 20, lr_method = 's
         # 數次 epoch 的 SGD, 還沒做 random choice
         for i in range(epoch):
             b, w = SGD(x, y, lr, b, w)
-            print('epoch:', i+1)  
-
+            print('epoch:', i+1)
+            stop, loss = early_stopping(x, y, b, w, loss)
+            if  stop == True:
+                break
     return b, w
 
 def LinearRegression_close(x, y):
@@ -115,7 +118,7 @@ def SGD_dyn_lr(x, y, lr, b, w, epoch):
         gradient_w = gradient(x, y, w)
         ada, sum_squ_grad = adagrad(gradient_w, sum_squ_grad)
         lr = sta_lr / ada
-        w = w - lr * gradient_w #* (1 / x_count)
+        w = w - lr * gradient_w * (1 / x_count)
 
     return w[0], w[1:]
 
@@ -154,3 +157,12 @@ def adagrad(gradient, sum_squ_grad):
     sum_squ_grad += gradient ** 2
     adagrad = sum_squ_grad ** 0.5
     return adagrad, sum_squ_grad 
+
+def early_stopping(x, y, b, w, pre_loss):
+    if pre_loss == None:
+        return False, mse(y, predict(x, b, w))
+    stop = False
+    loss = mse(y, predict(x, b, w))
+    if loss >= pre_loss:
+        stop = True
+    return stop, loss

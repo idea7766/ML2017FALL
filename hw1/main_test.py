@@ -1,4 +1,5 @@
 import sys
+import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
@@ -6,9 +7,10 @@ import numpy as np
 import linear_model as lm
 import utils
 
-train_path = sys.argv[1]
-test_path = sys.argv[2]
-output_path = sys.argv[3]
+train_path = os.path.join(os.path.dirname(__file__), "./data/train.csv")
+test_path = os.path.join(os.path.dirname(__file__), "./data/test.csv")
+output_path = os.path.join(os.path.dirname(__file__), "./ans.csv")
+
 
 arr_train = utils.load(train_path, mode = 'train', fea_select = (4, 5, 6, 9))
 arr_test = utils.load(test_path, mode = 'test', fea_select = (4, 5, 6, 9))
@@ -31,7 +33,7 @@ for i in range(5):
     print('x train: ',x_train.shape)
     print('y train', y_train.shape)
     # b_temp, w_temp = lm.LinearRegression_close(x_train, y_train)
-    b_temp, w_temp = lm.LinearRegression(x_train, y_train, lr = 0.001, epoch = 1000)
+    b_temp, w_temp = lm.LinearRegression(x_train, y_train, lr = 0.01, epoch = 10000)
     b = b + b_temp
     w = w + w_temp
 b = b / 5
