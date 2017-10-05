@@ -99,7 +99,7 @@ def validation(feats, lables, ratio = 0.1):
     '''
     nb_cut = int(feats.shape[0] *ratio)
 
-    x_train = feats[:-nb_cut, :]
+    x_train = feats[:-nb_cut]
     y_train = lables[:-nb_cut]
 
     x_val = feats[-nb_cut:]
@@ -116,4 +116,4 @@ def shuffle(x, y):
     np.random.shuffle(data)
     x = data[:, :fea_num]
     y = data[:, fea_num:]
-    return x, y
+    return x, y.flatten()
