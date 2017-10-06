@@ -22,7 +22,7 @@ def scaling(data, max, min):
         new_data = (data - min) / (max - min)
     return new_data
 
-def load(path, mode = 'train', fea_select = None): # only for ML2017FALL hw1
+def load(path, mode = 'train', fea_select = None, y_pos = 0): # only for ML2017FALL hw1
     '''
     只能 load hw1 的 data
     '''
@@ -42,21 +42,25 @@ def load(path, mode = 'train', fea_select = None): # only for ML2017FALL hw1
                     continue
                 data_of_hour = arr_pm25_pre[18*i:18+18*i, j]
                 arr_pm25 = np.append(arr_pm25, [data_of_hour], axis = 0)
-
+        wind_x = np.cos(arr_pm25[:, 15] * np.pi / 180).reshape(arr_pm25.shape[0],1)
+        wind_y = np.sin(arr_pm25[:, 15] * np.pi / 180).reshape(arr_pm25.shape[0],1)        
+        arr_pm25 = np.append(arr_pm25, wind_x, axis = 1)
+        arr_pm25 = np.append(arr_pm25, wind_y, axis = 1)   
+        print('arr_pm25.shape', arr_pm25.shape)
         if fea_select != None:
             arr_pm25 = arr_pm25[:, fea_select]
 
         data_of_month = int(arr_pm25.shape[0] / 12)
         arr_pm25_new = align(arr_pm25[0: data_of_month], 9)
-        print('未處理前的 arr_pm25', arr_pm25_new.shape)
+        # print('未處理前的 arr_pm25', arr_pm25_new.shape)
         x_new = arr_pm25_new [:-1]
-        y_new = arr_pm25_new [1:, 35]
+        y_new = arr_pm25_new [1:, y_pos]
         for i in range(12):
             if i == 0:
                 continue
             arr_pm25_temp = align(arr_pm25[data_of_month * i : data_of_month * (i + 1)], 9)
             x_new = np.append(x_new, arr_pm25_temp[:-1], axis = 0)
-            y_new = np.append(y_new, arr_pm25_temp[1:, 35], axis = 0)
+            y_new = np.append(y_new, arr_pm25_temp[1:, y_pos], axis = 0)
 
         return x_new, y_new.flatten()   
 
@@ -69,6 +73,12 @@ def load(path, mode = 'train', fea_select = None): # only for ML2017FALL hw1
         arr_pm25_pre = df_pm25.iloc[:,2:].replace('NR', 0).values
         arr_pm25_pre = arr_pm25_pre.astype(float)
         arr_pm25 = np.array(np.transpose(arr_pm25_pre[:18]))
+
+        wind_x = np.cos(arr_pm25[:, 15] * np.pi / 180).reshape(arr_pm25.shape[0],1)
+        wind_y = np.sin(arr_pm25[:, 15] * np.pi / 180).reshape(arr_pm25.shape[0],1)        
+        arr_pm25 = np.append(arr_pm25, wind_x, axis = 1)
+        arr_pm25 = np.append(arr_pm25, wind_y, axis = 1)
+
         if fea_select != None:
             arr_pm25 = arr_pm25[:, fea_select]
         arr_pm25 = [arr_pm25.flatten()]
@@ -77,6 +87,10 @@ def load(path, mode = 'train', fea_select = None): # only for ML2017FALL hw1
             if i == 0:
                 continue
             data_of_9hr = np.transpose(arr_pm25_pre[18*i:18*i+18])
+            wind_x = np.cos(data_of_9hr[:, 15] * np.pi / 180).reshape(data_of_9hr.shape[0],1)
+            wind_y = np.sin(data_of_9hr[:, 15] * np.pi / 180).reshape(data_of_9hr.shape[0],1)        
+            data_of_9hr = np.append(data_of_9hr, wind_x, axis = 1)
+            data_of_9hr = np.append(data_of_9hr, wind_y, axis = 1) 
             if fea_select != None:
                 data_of_9hr = data_of_9hr[:, fea_select]
             arr_pm25 = np.append(arr_pm25, [data_of_9hr.flatten()], axis=0)

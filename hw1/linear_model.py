@@ -137,7 +137,7 @@ def gradient(x, y, w):
 
     gradient_weight = np.zeros(num_fea)
     hypothesis = np.dot(x, w)
-    print(hypothesis.shape)
+    # print(hypothesis.shape)
     loss = hypothesis - y    
     print('>>>square error: ', sum(loss ** 2))
     # print('hypothesis:', hypothesis)

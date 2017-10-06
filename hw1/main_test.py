@@ -14,9 +14,12 @@ model_path = os.path.join(os.path.dirname(__file__), "./model")
 
 
 # 製作 "x, y" ，以每個小時預測下一個小時
-x, y= utils.load(train_path, mode = 'train', fea_select = (4, 5, 6, 9))
+x, y= utils.load(train_path, mode = 'train', fea_select = (0, 4, 5, 6, 7, 8, 9, 16, 18, 19), y_pos = 86)
+print('x', x.shape)
+print('y', y.shape)
 x, max, min = utils.rescaling(x)
-x_test = utils.load(test_path, mode = 'test', fea_select = (4, 5, 6, 9))
+x_test = utils.load(test_path, mode = 'test', fea_select = (0, 4, 5, 6, 7, 8, 9, 16, 18, 19), y_pos = 86)
+print('x_test [0]', x_test[0])
 
 # 做 5 回
 # b, w = np.array([0]), np.zeros(x.shape[1])
@@ -36,7 +39,7 @@ x_test = utils.load(test_path, mode = 'test', fea_select = (4, 5, 6, 9))
 
 x, y = utils.shuffle(x, y)
 x_train, y_train, x_val, y_val = utils.validation(x, y, ratio = 0.2)
-b, w = lm.LinearRegression(x, y, lr = 0.1, epoch = 1000000, x_val = x_val, y_val = y_val)
+b, w = lm.LinearRegression(x, y, lr = 0.07, epoch = 1000000, x_val = x_val, y_val = y_val)
 # b, w = lm.LinearRegression_close(x, y)
 
 
