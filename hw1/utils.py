@@ -46,9 +46,9 @@ def load(path, mode = 'train', fea_select = None): # only for ML2017FALL hw1
         if fea_select != None:
             arr_pm25 = arr_pm25[:, fea_select]
 
-        data_of_month = arr_pm25.shape[0] / 12
+        data_of_month = int(arr_pm25.shape[0] / 12)
         arr_pm25_new = align(arr_pm25[0: data_of_month], 9)
-        print(arr_pm25_new.shape)
+        print('未處理前的 arr_pm25', arr_pm25_new.shape)
         x_new = arr_pm25_new [:-1]
         y_new = arr_pm25_new [1:, 35]
         for i in range(12):
@@ -58,7 +58,7 @@ def load(path, mode = 'train', fea_select = None): # only for ML2017FALL hw1
             x_new = np.append(x_new, arr_pm25_temp[:-1], axis = 0)
             y_new = np.append(y_new, arr_pm25_temp[1:, 35], axis = 0)
 
-        return x_new, y_new     
+        return x_new, y_new.flatten()   
 
         # arr_pm25 = align(arr_pm25, 9)
         # return arr_pm25
@@ -83,10 +83,6 @@ def load(path, mode = 'train', fea_select = None): # only for ML2017FALL hw1
 
         return arr_pm25
 
-# def split_to_day(data, y_ind):
-#     data_of_month = data.shape[0] / 12
-#     data = align(data, 9)
-#     for in
 
 def align(data, num):
     if num <= 0 or None:
@@ -105,10 +101,21 @@ def write_out_ans(data, path):
     col = ['id', 'value']
     ans_sheet = []
     for i in range(data.shape[0]):
-        ans_sheet.append(('id_' + str(i), int(data[i])))
+        ans_sheet.append(('id_' + str(i), data[i]))
     df_ans = pd.DataFrame(ans_sheet, index = None, columns = col)
     df_ans.to_csv(path, index=False)
     print("應該存成功了...")
+
+def save_model(b, w, path):
+    if w.ndim != 1:
+        raise('不支援 ndim != 1 的arr')
+    b_w = np.insert(w, 0, b) # bias 放第 0 項
+    np.save(path, b_w)
+    print("model 儲存存成功了...")
+    
+
+def load_model(path):
+    pass
 
 def validation(feats, lables, ratio = 0.1):
     '''

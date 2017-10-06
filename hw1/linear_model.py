@@ -1,7 +1,7 @@
 import numpy as np
 from numpy.linalg import inv
 
-def LinearRegression(x, y, lr = 0.0001 , epoch = 5, ex_size = 20, lr_method = 'static', x_val = None,  y_val = None):
+def LinearRegression(x, y, lr = 0.0001 , epoch = 10000, ex_size = 20, lr_method = 'static', x_val = None,  y_val = None):
     '''
     # Linear Regression
     ## Basic Concpet
@@ -21,21 +21,28 @@ def LinearRegression(x, y, lr = 0.0001 , epoch = 5, ex_size = 20, lr_method = 's
     # initialization
     b = 0
     w = np.zeros(x.shape[1])
-    loss = None
 
     if lr_method == 'adagrad':
         # print('目前只有 static learning rate\n')
         print('使用adagrad')
         SGD_dyn_lr(x, y, lr, b, w, epoch)
 
-    elif lr_method == 'static':
+    elif lr_method == 'static' and x_val != None and y_val !=None:
         # 數次 epoch 的 SGD, 還沒做 random choice
+        loss = None
         for i in range(epoch):
             b, w = SGD(x, y, lr, b, w)
             print('epoch:', i+1)
-            stop, loss = early_stopping(x_val, y_val, b, w, loss)
-            if  stop == True:
-                break
+            if i % 1000 ==0:
+                stop, loss = early_stopping(x_val, y_val, b, w, loss)
+                if  stop == True:
+                    print('>>>break at epoch :', i)
+                    break
+    else:
+        for i in range(epoch):
+            b, w = SGD(x, y, lr, b, w)
+            print('epoch:', i+1)
+            
     return b, w
 
 def LinearRegression_close(x, y):
@@ -50,11 +57,11 @@ def LinearRegression_close(x, y):
     
     y_mat = np.transpose(np.mat(y))
     # y_mat = np.mat(y)  
-    print(y_mat.shape)
+    # print('y_mat.shape', y_mat.shape)
     x_mat = np.mat(x)
-    print(x_mat.shape)
+    # print('x_mat.shape', x_mat.shape)
     x_trans_mat = np.mat(x_trans)
-    print(x_trans_mat.shape)
+    # print('x_trans_mat.shape', x_trans_mat.shape)
 
     w = inv(x_trans_mat * x_mat)  * x_trans_mat * y_mat
     w = np.array(w)
@@ -131,9 +138,8 @@ def gradient(x, y, w):
     gradient_weight = np.zeros(num_fea)
     hypothesis = np.dot(x, w)
     print(hypothesis.shape)
-    loss = hypothesis - y
-    print(type(loss))    
-    print('se: ', sum(loss ** 2))
+    loss = hypothesis - y    
+    print('>>>square error: ', sum(loss ** 2))
     # print('hypothesis:', hypothesis)
 
     x_trans = np.transpose(x)
