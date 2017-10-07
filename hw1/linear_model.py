@@ -25,7 +25,7 @@ def LinearRegression(x, y, lr = 0.0001 , epoch = 10000, ex_size = 20, lr_method 
     if lr_method == 'adagrad':
         # print('目前只有 static learning rate\n')
         print('使用adagrad')
-        SGD_dyn_lr(x, y, lr, b, w, epoch)
+        b, w  = SGD_dyn_lr(x, y, lr, b, w, epoch, x_val = x_val, y_val = y_val)
 
     elif lr_method == 'static' and x_val != None and y_val !=None:
         # 數次 epoch 的 SGD, 還沒做 random choice
@@ -41,7 +41,7 @@ def LinearRegression(x, y, lr = 0.0001 , epoch = 10000, ex_size = 20, lr_method 
     else:
         for i in range(epoch):
             b, w = SGD(x, y, lr, b, w)
-            print('epoch:', i+1)
+            print('-----------epoch:-----------', i+1)
             
     return b, w
 
@@ -98,7 +98,7 @@ def SGD(x, y, lr, b, w):
 
     return w_temp[0], w_temp[1:]
 
-def SGD_dyn_lr(x, y, lr, b, w, epoch):
+def SGD_dyn_lr(x, y, lr, b, w, epoch, x_val = None, y_val = None):
     '''
     no 'S' here now 
     ## Attribute
@@ -121,15 +121,28 @@ def SGD_dyn_lr(x, y, lr, b, w, epoch):
 
     num_fea = x.shape[1]
     x_count = x.shape[0]
-    for i in range(epoch):
-        gradient_w = gradient(x, y, w)
-        ada, sum_squ_grad = adagrad(gradient_w, sum_squ_grad)
-        lr = sta_lr / ada
-        w = w - lr * gradient_w * (1 / x_count)
+    if x_val != None and y_val != None:
+        loss = None
+        for i in range(epoch):            
+            gradient_w = gradient(x, y, w, i=i)
+            ada, sum_squ_grad = adagrad(gradient_w, sum_squ_grad)
+            lr = sta_lr / ada
+            w = w - lr * gradient_w
+            if i % 1000 ==0:
+                stop, loss = early_stopping(x_val, y_val, w[0], w[1:], loss)
+                if  stop == True:
+                    print('>>>break at epoch :', i)
+                    break    
+    else:
+        for i in range(epoch):
+            gradient_w = gradient(x, y, w)
+            ada, sum_squ_grad = adagrad(gradient_w, sum_squ_grad)
+            lr = sta_lr / ada
+            w = w - lr * gradient_w
 
     return w[0], w[1:]
 
-def gradient(x, y, w): 
+def gradient(x, y, w, i): 
     '''
     caculus of loss function (square error)
     '''
@@ -139,7 +152,7 @@ def gradient(x, y, w):
     hypothesis = np.dot(x, w)
     # print(hypothesis.shape)
     loss = hypothesis - y    
-    print('>>>square error: ', sum(loss ** 2))
+    print('>>> epoch : %d \t  | square error: %f' %(i, sum(loss ** 2)))
     # print('hypothesis:', hypothesis)
 
     x_trans = np.transpose(x)
