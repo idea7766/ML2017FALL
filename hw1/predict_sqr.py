@@ -6,8 +6,8 @@ import numpy as np
 import utils
 import linear_model as lm
 
-test_path = sys.arg[1]
-output_path = sys.arg[2]
+test_path = sys.argv[1]
+output_path = sys.argv[2]
 # test_path = os.path.join(os.path.dirname(__file__), "./data/test.csv")
 # output_path = os.path.join(os.path.dirname(__file__), "./ans_sqr_test.csv")
 
@@ -24,6 +24,6 @@ x_test = np.concatenate((x_test, x_test ** 2), axis = 1)
 x_test = utils.scaling(x_test, max, min)
 
 predicted = lm.predict(x_test, b, w)
-print('Predicted:', predicted)
+print('>>> Predicted Result :\n', predicted)
 
 utils.save_ans(predicted, output_path)

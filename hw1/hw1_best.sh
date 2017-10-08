@@ -1,3 +1,2 @@
 #!/bin/bash
-
-python predict.py $@
+python predict_sqr.py $@

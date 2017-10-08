@@ -6,8 +6,8 @@ import numpy as np
 import utils
 import linear_model as lm
 
-test_path = sys.arg[1]
-output_path = sys.arg[2]
+test_path = sys.argv[1]
+output_path = sys.argv[2]
 # test_path = os.path.join(os.path.dirname(__file__), "./data/test.csv")
 # output_path = os.path.join(os.path.dirname(__file__), "./ans_test.csv")
 
@@ -22,6 +22,6 @@ test_x = utils.load(test_path, mode = 'test', fea_select = fea_select, y_pos = y
 test_x = utils.scaling(test_x, max, min)
 
 predicted = lm.predict(test_x, b, w)
-print('Predicted:', predicted)
+print('>>> Predicted Result :\n', predicted)
 
 utils.save_ans(predicted, output_path)
