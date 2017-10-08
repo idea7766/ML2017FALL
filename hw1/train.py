@@ -21,7 +21,7 @@ x, max, min = utils.rescaling(x) # 作 rescaling ， 在 [0, 1] 間
 x, y = utils.shuffle(x, y)
 
 x_train, y_train, x_val, y_val = utils.validation(x, y, ratio = 0.1)
-b, w = lm.LinearRegression(x, y, lr = 100000, epoch = 10000, lr_method = 'adagrad', x_val = x_val, y_val = y_val)
+b, w = lm.LinearRegression(x, y, lr = 100000, epoch = 1000000, lr_method = 'adagrad', x_val = x_val, y_val = y_val)
 
 
 x_test = utils.load(test_path, mode = 'test', fea_select = fea_select, y_pos = y_pos) 

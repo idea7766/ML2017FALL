@@ -7,6 +7,10 @@ import numpy as np
 import linear_model as lm
 import utils
 
+'''
+聽說取二次也算 linear regression
+'''
+
 train_path = os.path.join(os.path.dirname(__file__), "./data/train.csv")
 test_path = os.path.join(os.path.dirname(__file__), "./data/test.csv")
 output_path = os.path.join(os.path.dirname(__file__), "./ans.csv")
