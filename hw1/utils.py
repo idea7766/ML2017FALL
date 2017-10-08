@@ -24,7 +24,15 @@ def scaling(data, max, min):
 
 def load(path, mode = 'train', fea_select = None, y_pos = 0): # only for ML2017FALL hw1
     '''
-    只能 load hw1 的 data
+    # HW1 的 data loader
+    ## Attribute
+    path: 要讀取的檔案路徑
+    mode: 有 'train' 及 'test' 對應要讀的檔案類型
+    fea_select: 要的特徵
+    y_pos: 經過讀取後，y 的位置
+    ## Return
+    b: bias
+    w: weight
     '''
     if mode == 'train':
         df_pm25 = pd.read_csv(path, encoding='big5')
@@ -42,6 +50,7 @@ def load(path, mode = 'train', fea_select = None, y_pos = 0): # only for ML2017F
                     continue
                 data_of_hour = arr_pm25_pre[18*i:18+18*i, j]
                 arr_pm25 = np.append(arr_pm25, [data_of_hour], axis = 0)
+        # 加入風的 x, y 向量
         wind_x = np.cos(arr_pm25[:, 15] * np.pi / 180).reshape(arr_pm25.shape[0],1)
         wind_y = np.sin(arr_pm25[:, 15] * np.pi / 180).reshape(arr_pm25.shape[0],1)        
         arr_pm25 = np.append(arr_pm25, wind_x, axis = 1)
@@ -52,7 +61,6 @@ def load(path, mode = 'train', fea_select = None, y_pos = 0): # only for ML2017F
 
         data_of_month = int(arr_pm25.shape[0] / 12)
         arr_pm25_new = align(arr_pm25[0: data_of_month], 9)
-        # print('未處理前的 arr_pm25', arr_pm25_new.shape)
         x_new = arr_pm25_new [:-1]
         y_new = arr_pm25_new [1:, y_pos]
         for i in range(12):
@@ -62,10 +70,7 @@ def load(path, mode = 'train', fea_select = None, y_pos = 0): # only for ML2017F
             x_new = np.append(x_new, arr_pm25_temp[:-1], axis = 0)
             y_new = np.append(y_new, arr_pm25_temp[1:, y_pos], axis = 0)
 
-        return x_new, y_new.flatten()   
-
-        # arr_pm25 = align(arr_pm25, 9)
-        # return arr_pm25
+        return x_new, y_new.flatten()
 
     if mode == 'test':
         df_pm25 = pd.read_csv(path, encoding='big5', header=None)
@@ -111,25 +116,36 @@ def align(data, num):
     new_data = np.asarray(ls_align_data)
     return new_data
 
-def write_out_ans(data, path):
+def save_ans(data, path):
     col = ['id', 'value']
     ans_sheet = []
     for i in range(data.shape[0]):
+        if data[i] < 0:
+            data[i] = 0
         ans_sheet.append(('id_' + str(i), data[i]))
     df_ans = pd.DataFrame(ans_sheet, index = None, columns = col)
     df_ans.to_csv(path, index=False)
-    print("應該存成功了...")
+    print(">>> ans儲存成功")
 
 def save_model(b, w, path):
     if w.ndim != 1:
         raise('不支援 ndim != 1 的arr')
     b_w = np.insert(w, 0, b) # bias 放第 0 項
     np.save(path, b_w)
-    print("model 儲存存成功了...")
+    print(">>> model 儲存存成功")
     
+def save_scaler(max, min, path):
+    scaler = np.append([max], [min], axis = 0)
+    np.save(path, scaler)
+    print('>>> scaler 儲存成功')    
 
 def load_model(path):
-    pass
+    w = np.load(path)
+    return w[0], w[1:]
+
+def load_scaler(path):
+    scaler = np.load(path)
+    return scaler[0], scaler[1]
 
 def validation(feats, lables, ratio = 0.1):
     '''
@@ -150,7 +166,7 @@ def validation(feats, lables, ratio = 0.1):
 
 def shuffle(x, y):
     '''
-    根本不用= =
+    # shuffle x 和 y
     '''
     fea_num = x.shape[1]
     data = np.insert(x, fea_num, y, axis =1)

@@ -1,19 +1,27 @@
 import numpy as np
 from numpy.linalg import inv
 
-def LinearRegression(x, y, lr = 0.0001 , epoch = 10000, ex_size = 20, lr_method = 'static', x_val = None,  y_val = None):
+def LinearRegression(x, y, lr = 0.0001 , epoch = 10000, lr_method = 'static', x_val = None,  y_val = None):
     '''
     # Linear Regression
     ## Basic Concpet
     model: Linear_function 
-    Loss_function: square error
-    Opt_algo: SGD
+    Loss_function: Square error
+    Opt_algo: Gradient descnt
     Learning_Rate: Static
+
     ## Attirbute
     x: traing data X
     y: traing data Y
     lr: learning rate
-    epoch: epoch數
+    epoch: i.e. iteration 的回數
+    lr_method: 調整 learning rate 的方法，有 'static' 及 'adagrad'
+    x_val: 若有 validation set，則會作 early stopping
+    y_val: 若有 validation set，則會作 early stopping 
+
+    ## Return
+    b: constant bias
+    w: weight array
     '''
     if x.ndim != 2:
         raise('= =寫二維陣列啦')
@@ -40,14 +48,14 @@ def LinearRegression(x, y, lr = 0.0001 , epoch = 10000, ex_size = 20, lr_method 
                     break
     else:
         for i in range(epoch):
+            print('epoch:', i+1)
             b, w = SGD(x, y, lr, b, w)
-            print('-----------epoch:-----------', i+1)
             
     return b, w
 
 def LinearRegression_close(x, y):
     '''
-    # 用於驗證
+    # 用於驗證的 close form
     ## Return
     b: bias
     w: weight array
@@ -107,6 +115,8 @@ def SGD_dyn_lr(x, y, lr, b, w, epoch, x_val = None, y_val = None):
     lr: learning rates 
     b: constant bias
     w: weight array
+    x_val: 若有 validation set，則會作 early stopping
+    y_val: 若有 validation set，則會作 early stopping    
 
     ## Return 
     b: constant bias
