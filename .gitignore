@@ -1,0 +1,10 @@
+*.h5
+*.pyc
+*.csv
+*/.vscode/*
+*/.ipynb_checkpoints/*
+*/ans/*
+*/data/*
+*/model/*
+*/Graph/*
+*/__pycache__/*
