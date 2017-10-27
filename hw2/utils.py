@@ -79,7 +79,9 @@ def save_model(b, w, path, time_mark = True):
     np.save(path, b_w)
     print(">>> model 儲存存成功")
 
-
+def load_model(path):
+    w = np.load(path)
+    return w[0], w[1:]
 
 def save_ans(data = None, name = 'ans', extension = 'csv', time_mark = True):
     '''
@@ -102,7 +104,7 @@ def save_ans(data = None, name = 'ans', extension = 'csv', time_mark = True):
         extension
 
     else:
-        save_name = name
+        save_name = name + extension
     
     save_path = base_dir + '/ans/' + save_name
     ans = []
