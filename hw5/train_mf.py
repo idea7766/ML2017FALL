@@ -1,5 +1,6 @@
 import os
 import numpy as np
+import sys
 from keras.callbacks import EarlyStopping, CSVLogger, ModelCheckpoint, TensorBoard, ReduceLROnPlateau
 
 import utils
@@ -16,17 +17,11 @@ MONITOR = 'val_rmse'
 NUM_USR = 6041
 NUM_MOV = 3953
 
-MAGIC_MEAN = 3.58171208604
+MEAN = 3.58171208604
 
-TRAIN_DATA = './data/train.csv'
-DATA_DIR = './data/'
-COUNTER_PATH = './counter/mf_count'
+TRAIN_DATA = sys.argv[1]
 
-NUM_FOLDER = utils.load_pkl(COUNTER_PATH)
-NUM_FOLDER += 1
-utils.save_pkl(COUNTER_PATH, NUM_FOLDER)
-
-TRAIN_FOLDER = './model_chk/mf_' + str(NUM_FOLDER) + '_drop_' + str(DROP)
+TRAIN_FOLDER = './model_chk/mf'
 CHECK_POINT_NAME = TRAIN_FOLDER + '/model.{epoch:04d}-{' + MONITOR + ':.4f}.h5'
 LOG_NAME = TRAIN_FOLDER + '/log.csv'
 
@@ -36,7 +31,7 @@ if not os.path.exists(TRAIN_FOLDER):
 str_grab = str(NUM_GRAB_VAL)
 x_train ,y_train = utils.load_data(TRAIN_DATA, file_type = 'train')
 print(y_train)
-y_train = y_train.astype(float) - MAGIC_MEAN
+y_train = y_train.astype(float) - MEAN
 print(y_train)
 
 x_train, y_train = utils.shuffle(x_train, y_train)
