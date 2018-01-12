@@ -7,6 +7,7 @@ from skimage import io, transform
 import utils
 
 SVD_PATH = './svd.pkl'
+U4_PATH = './u4.pkl'
 X_MAEN = './x_mean.pkl'
 
 INPUT = sys.argv[1]
@@ -16,13 +17,16 @@ def main():
     size = 600
     k = 4
 
-    (U, s, V) = utils.load_pkl(SVD_PATH)
+    # (U, s, V) = utils.load_pkl(SVD_PATH)
+    eig_face = utils.load_pkl(U4_PATH)
     x_mean = utils.load_pkl(X_MAEN)
-    eig_face = U.T
+    # eig_face = U.T
 
     print('- A3')
-    en = eig_face[:k]
-    en = np.matrix(eig_face[:k])
+    # en = eig_face[:k]
+    # en = np.matrix(eig_face[:k])
+    en = eig_face
+    # en = np.matrix(eig_face)
     print('  * encoder shape:', en.shape)
     sample = get_sample()
 
@@ -42,7 +46,7 @@ def main():
     io.imsave(OUTPUT, faces.reshape(size, size, 3))
 
 def get_sample():
-    img = io.imread(INPUT).flatten()
+    img = io.imread(os.path.join(INPUT, OUTPUT)).flatten()
     return img
 
 if __name__=='__main__':

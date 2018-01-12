@@ -5,6 +5,7 @@ import utils
 
 # TEST_PATH = './data/test_case.csv'
 TEST_PATH = sys.argv[1]
+OUT_PUT_PATH = sys.argv[2]
 LABEL_PATH = './label.npy'
 
 # SAVE_ANS = 
@@ -19,4 +20,4 @@ for i in range(len(test_case)):
 
 print(ans)
 print(ans.shape)
-utils.save_ans(ans)
+utils.save_dir(ans, OUT_PUT_PATH)
